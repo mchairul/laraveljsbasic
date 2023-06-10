@@ -38,12 +38,22 @@
 <!-- use version 0.19.3 -->
 <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
 <script>
-    var tglForNameFile = '';
+    var queryString = window.location.search;
+    console.log(queryString);
+
+    var urlSearchParam = new URLSearchParams(queryString);
+    console.log(urlSearchParam.get('tgl'));
+    var getTgl = urlSearchParam.get('tgl');
+
+    if(getTgl !== null)
+        var tglForNameFile = getTgl;
+    else
+        var tglForNameFile = '';
 
     function doit(type, fn) {
         var elt = document.getElementById('data-table');
         var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
-        XLSX.writeFile(wb, fn || ('Data Penjualan.' + (type || 'xlsx')));
+        XLSX.writeFile(wb, fn || ('Data Penjualan.' + tglForNameFile + (type || 'xlsx')));
     }
 
     function searchByDate()

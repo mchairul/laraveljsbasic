@@ -23,6 +23,7 @@ class Report extends Controller
         }
         //dd($dataSales);
         return view('report',[
+            'tgl' => $tgl,
             "dataSales" => $dataSales
         ]);
     }
