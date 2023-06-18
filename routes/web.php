@@ -29,5 +29,6 @@ Route::get('report', [Report::class, 'index'])->name('report');
 
 Route::get('helpdesk', [Helpdesk::class, 'index'])->name('helpdesk');
 Route::post('addtickets', [Helpdesk::class, 'addticket'])->name('helpdesk');
+Route::get('showtickets', [Helpdesk::class, 'showtickets'])->name('helpdesk');
 
 Route::get('chat', [Chat::class, 'index'])->name('chat');

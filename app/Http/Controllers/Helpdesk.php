@@ -31,4 +31,13 @@ class Helpdesk extends Controller
             'csrf' => csrf_token()
         ]);
     }
+
+    public function showtickets()
+    {
+        $dataTickets = Tickets::all();
+
+        return view('datatickets',[
+            "dataTickets" => $dataTickets
+        ]);
+    }
 }

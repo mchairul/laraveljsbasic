@@ -57,6 +57,7 @@
                         //ubah blob jadi base64
                         reader.readAsDataURL(imageBlob);
 
+                        //callback ketika reader selesai (pada onloadend)
                         reader.onloadend = function () {
                             var base64String = reader.result;
                             base64Image = base64String;
