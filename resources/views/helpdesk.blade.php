@@ -37,17 +37,24 @@
             console.error(err);
         });
         console.log("items:", items);
+
+        //iterasi items yang didapat dari clipboard data
         for (let item of items) {
             console.log("item.type", item.types);
 
+            //iterasi types
             for (let type of item.types) {
 
+                //jika awalan type dimulai dengan 'image/'
                 if (type.startsWith("image/")) {
 
                     item.getType(type).then((imageBlob) => {
 
                         console.log(imageBlob);
+
                         var reader = new FileReader();
+
+                        //ubah blob jadi base64
                         reader.readAsDataURL(imageBlob);
 
                         reader.onloadend = function () {
@@ -68,6 +75,7 @@
         var user = document.getElementById('user').value;
         var description = document.getElementById('description').value;
 
+        //form ala javascript
         let formData = new FormData();
         formData.append('user', user);
         formData.append('description', description);
@@ -78,6 +86,7 @@
 
     }
 
+    //post data dengan fetch
     async function postData(url = '', data) {
         var response = await fetch(url, {
             method: 'POST',
