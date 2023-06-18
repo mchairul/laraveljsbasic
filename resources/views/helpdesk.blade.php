@@ -82,7 +82,17 @@
         formData.append('att', base64Image);
         formData.append('_token', csrf);
 
-        postData('addtickets', formData);
+        postData('addtickets', formData).then((data) => {
+            console.log(data);
+
+            csrf = data.csrf;
+
+            alert('success add ticket');
+            
+            document.getElementById('user').value = '';
+            document.getElementById('description').value = '';
+            $container.innerHTML = '';
+        });
 
     }
 

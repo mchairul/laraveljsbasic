@@ -27,6 +27,8 @@ class Helpdesk extends Controller
         $tickets->attachment = $att;
         $tickets->save();
 
-        
+        return response()->json([
+            'csrf' => csrf_token()
+        ]);
     }
 }
