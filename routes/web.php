@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Grafik;
 use App\Http\Controllers\Report;
+use App\Http\Controllers\Helpdesk;
+use App\Http\Controllers\Chat;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +26,8 @@ Route::get('/', function () {
 Route::get('grafik', [Grafik::class, 'index'])->name('grafik');
 
 Route::get('report', [Report::class, 'index'])->name('report');
+
+Route::get('helpdesk', [Helpdesk::class, 'index'])->name('helpdesk');
+Route::post('addtickets', [Helpdesk::class, 'addticket'])->name('helpdesk');
+
+Route::get('chat', [Chat::class, 'index'])->name('chat');
