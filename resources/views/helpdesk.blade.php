@@ -70,6 +70,7 @@
             }
         }
     }
+
     var $container = document.querySelector(".container");
 
     function submitTicket() {
@@ -89,7 +90,7 @@
             csrf = data.csrf;
 
             alert('success add ticket');
-            
+    
             document.getElementById('user').value = '';
             document.getElementById('description').value = '';
             $container.innerHTML = '';

@@ -56,33 +56,119 @@
 @section('main-content')
 <h2>Chat Messages</h2>
 
-<div class="container">
-  <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;">
-  <p>Hello. How are you today?</p>
-  <span class="time-right">11:00</span>
-</div>
+<div id="chat">
+  @forelse ($chats as $chat)
+  @if($chat->user === $user)
+  <div class="container darker">
+      <img src="{{ asset('pic.svg') }}" alt="Avatar" class="right" style="width:100%;">
+      <p>{{ $chat->chat }}</p>
+      <span class="time-left">{{ $chat->tanggal }}</span>
+    </div>
+  </div>
+  @else
+  <div class="container">
+    <img src="{{ asset('pic.svg') }}" alt="Avatar" style="width:100%;">
+    <p>{{ $chat->chat }}</p>
+    <span class="time-right">{{ $chat->tanggal }}</span>
+  </div>
+  @endif
+  @empty
+  <p>no data</p>
+  @endforelse
+  
 
-<div class="container darker">
-  <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right" style="width:100%;">
-  <p>Hey! I'm fine. Thanks for asking!</p>
-  <span class="time-left">11:01</span>
-</div>
-
-<div class="container">
-  <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;">
-  <p>Sweet! So, what do you wanna do today?</p>
-  <span class="time-right">11:02</span>
-</div>
-
-<div class="container darker">
-  <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right" style="width:100%;">
-  <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
-  <span class="time-left">11:05</span>
+<div style="position: fixed;
+    bottom: 15px;
+    width: 50%;">
+    <input type="text" style="width:70%;height:50px;" id="isichat">
+    <button type="button" onclick="sendChat()">Send</button>
 </div>
 @endsection
 
 @section('js')
 <script>
-    let csrf = '{{ csrf_token() }}';
+  var csrf = '{{ csrf_token() }}';
+  var user = '{{ $user }}';
+  var idconv = '{{ $idconv }}';
+  var divChat = document.getElementById('chat');
+
+  setInterval(function () {
+    getChat()
+  }, 3000);
+
+  function sendChat() {
+    var isiChat = document.getElementById('isichat').value;
+    //alert(isiChat);
+    if(isiChat != '') {
+      //form ala javascript
+      let formData = new FormData();
+      formData.append('user', user);
+      formData.append('idconv', idconv);
+      formData.append('chat', isiChat);
+      formData.append('_token', csrf);
+
+      postData('{{ route("addchat") }}', formData).then((data) => {
+
+        var currentdate = new Date(); 
+        var datetime =  (currentdate.getFullYear()+1)  + "-" 
+                        + currentdate.getMonth() + "-"
+                        + currentdate.getHours() + ":"  
+                        + currentdate.getMinutes() + ":" 
+                        + currentdate.getSeconds();
+            console.log(data);
+
+            csrf = data.csrf;
+
+            //alert('success kirim chat');
+
+            var divChat = document.getElementById('chat');
+            var strChat = '<div class="container darker">';
+            strChat +=  '<img src="{{ asset("pic.svg") }}" alt="Avatar" class="right" style="width:100%;">';
+            strChat +=  '<p>' + isiChat + '</p>';
+            strChat +=  '<span class="time-left">' + datetime + '</span>';
+            strChat += '</div></div>';
+          divChat.insertAdjacentHTML( 'beforeend',strChat);
+          document.getElementById('isichat').value = '';
+
+      });
+
+    }
+  }
+
+
+  function getChat() {
+    let formData = new FormData();
+    formData.append('idconv', idconv);
+    formData.append('user', user);
+    formData.append('_token', csrf);
+    postData('{{ route("getchat") }}', formData).then((data) => {
+      data.chat.forEach(function(currentValue, index, arr){
+        //console.log(currentValue);
+        var classTime = 'time-right';
+        var addContainer = '';
+        var classAvatar = '';
+        if(currentValue.user == user) {
+          classTime = 'time-left';
+          addContainer = 'darker';
+          classAvatar = 'class="right"';
+        }
+        var strChat = '<div class="container '+addContainer+'">';
+        strChat +=  '<img src="{{ asset("pic.svg") }}" alt="Avatar" '+classAvatar+' style="width:100%;">';
+        strChat +=  '<p>' + currentValue.chat + '</p>';
+        strChat +=  '<span class="'+classTime+'">' + currentValue.tanggal + '</span>';
+        strChat += '</div></div>';
+        divChat.insertAdjacentHTML( 'beforeend',strChat);
+      });
+    });
+  }
+
+  //post data dengan fetch
+  async function postData(url = '', data) {
+        var response = await fetch(url, {
+            method: 'POST',
+            body: data
+        });
+        return response.json();
+  }
 </script>
 @endsection
