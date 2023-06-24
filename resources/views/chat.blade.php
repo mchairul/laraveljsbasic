@@ -61,26 +61,25 @@
   @if($chat->user === $user)
   <div class="container darker">
       <img src="{{ asset('pic.svg') }}" alt="Avatar" class="right" style="width:100%;">
-      <p>{{ $chat->chat }}</p>
+      <p>{!! $chat->chat !!}</p>
       <span class="time-left">{{ $chat->tanggal }}</span>
-    </div>
   </div>
   @else
   <div class="container">
     <img src="{{ asset('pic.svg') }}" alt="Avatar" style="width:100%;">
-    <p>{{ $chat->chat }}</p>
+    <p>{!! $chat->chat !!}</p>
     <span class="time-right">{{ $chat->tanggal }}</span>
   </div>
   @endif
   @empty
   <p>no data</p>
   @endforelse
-  
+</div>
 
 <div style="position: fixed;
     bottom: 15px;
     width: 50%;">
-    <input type="text" style="width:70%;height:50px;" id="isichat">
+    <input type="text" style="width:70%;height:50px;" id="isichat" onpaste="pasteImage()">
     <button type="button" onclick="sendChat()">Send</button>
 </div>
 @endsection
@@ -161,6 +160,75 @@
       });
     });
   }
+
+  async function pasteImage() {
+        var items = await navigator.clipboard.read().catch((err) => {
+            console.error(err);
+        });
+        console.log("items:", items);
+
+        //iterasi items yang didapat dari clipboard data
+        for (let item of items) {
+            console.log("item.type", item.types);
+
+            //iterasi types
+            for (let type of item.types) {
+
+                //jika awalan type dimulai dengan 'image/'
+                if (type.startsWith("image/")) {
+
+                    item.getType(type).then((imageBlob) => {
+
+                        console.log(imageBlob);
+
+                        var reader = new FileReader();
+
+                        //ubah blob jadi base64
+                        reader.readAsDataURL(imageBlob);
+
+                        //callback ketika reader selesai (pada onloadend)
+                        reader.onloadend = function () {
+                            var base64String = reader.result;
+                            base64Image = base64String;
+                            console.log('Base64 String - ', base64String);
+                            var image = `<img src="${base64String}" width="300px"/>`;
+                            //$container.innerHTML = image;
+
+                            var formData = new FormData();
+                            formData.append('user', user);
+                            formData.append('idconv', idconv);
+                            formData.append('chat', image);
+                            formData.append('_token', csrf);
+
+
+                            postData('{{ route("addchat") }}', formData).then((data) => {
+
+                              var currentdate = new Date(); 
+                              var datetime =  (currentdate.getFullYear()+1)  + "-" 
+                                            + currentdate.getMonth() + "-"
+                                            + currentdate.getHours() + ":"  
+                                            + currentdate.getMinutes() + ":" 
+                                            + currentdate.getSeconds();
+                                console.log(data);
+
+                                csrf = data.csrf;
+
+                                var divChat = document.getElementById('chat');
+                                var strChat = '<div class="container darker">';
+                                strChat +=  '<img src="{{ asset("pic.svg") }}" alt="Avatar" class="right" style="width:100%;">';
+                                strChat +=  '<p>' + image + '</p>';
+                                strChat +=  '<span class="time-left">' + datetime + '</span>';
+                                strChat += '</div></div>';
+                              divChat.insertAdjacentHTML( 'beforeend',strChat);
+                              document.getElementById('isichat').value = '';
+
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    }
 
   //post data dengan fetch
   async function postData(url = '', data) {

@@ -59,6 +59,7 @@ class Chat extends Controller
 
         $chatsData = Chats::where('id_conversation', $idconv)
         ->where('is_processed', 0)
+        ->where('user', '!=', $user)
         ->get();
 
         $viewChats = array();
