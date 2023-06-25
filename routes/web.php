@@ -6,6 +6,7 @@ use App\Http\Controllers\Grafik;
 use App\Http\Controllers\Report;
 use App\Http\Controllers\Helpdesk;
 use App\Http\Controllers\Chat;
+use App\Http\Controllers\Dom;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,6 @@ Route::get('showtickets', [Helpdesk::class, 'showtickets'])->name('helpdesk');
 Route::get('chat/{idconv}/{user}', [Chat::class, 'index'])->name('chat');
 Route::post('addchat', [Chat::class, 'addchat'])->name('addchat');
 Route::post('getchat', [Chat::class, 'getchat'])->name('getchat');
+
+Route::get('dom', [Dom::class, 'index'])->name('dom');
+Route::post('postdom', [Dom::class, 'postdata'])->name('postdom');

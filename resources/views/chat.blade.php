@@ -50,6 +50,9 @@
     float: left;
     color: #999;
     }
+    #chat{
+      margin-bottom:20%;
+    }
 </style>
 @endsection
 
@@ -79,7 +82,7 @@
 <div style="position: fixed;
     bottom: 15px;
     width: 50%;">
-    <input type="text" style="width:70%;height:50px;" id="isichat" onpaste="pasteImage()">
+    <input type="text" style="width:80%;height:50px;" id="isichat" onpaste="pasteImage()">
     <button type="button" onclick="sendChat()">Send</button>
 </div>
 @endsection
@@ -111,6 +114,7 @@
         var currentdate = new Date(); 
         var datetime =  (currentdate.getFullYear()+1)  + "-" 
                         + currentdate.getMonth() + "-"
+                        + currentdate.getDate() + "-"
                         + currentdate.getHours() + ":"  
                         + currentdate.getMinutes() + ":" 
                         + currentdate.getSeconds();
@@ -157,6 +161,7 @@
         strChat +=  '<span class="'+classTime+'">' + currentValue.tanggal + '</span>';
         strChat += '</div></div>';
         divChat.insertAdjacentHTML( 'beforeend',strChat);
+        
       });
     });
   }
