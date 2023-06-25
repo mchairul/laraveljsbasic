@@ -40,4 +40,9 @@ class Dom extends Controller
         DetailPesanan::insert($arrayPesanan);
         return redirect('dom');
     }
+
+    public function struk()
+    {
+        return view('struk');
+    }
 }

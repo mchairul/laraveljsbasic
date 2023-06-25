@@ -38,3 +38,4 @@ Route::post('getchat', [Chat::class, 'getchat'])->name('getchat');
 
 Route::get('dom', [Dom::class, 'index'])->name('dom');
 Route::post('postdom', [Dom::class, 'postdata'])->name('postdom');
+Route::get('struk', [Dom::class, 'struk'])->name('struk');
