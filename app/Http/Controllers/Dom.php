@@ -38,11 +38,22 @@ class Dom extends Controller
             ];
         }
         DetailPesanan::insert($arrayPesanan);
-        return redirect('dom');
+        return response()->json([
+            'id' => $idPesanan
+        ]);
     }
 
-    public function struk()
+    public function struk(Request $request)
     {
-        return view('struk');
+        $idPesanan = $request->id;
+
+        $pesanan = Pesanan::where('id', $idPesanan)->first();
+        //dd($pesanan['id']);
+
+        $detailPesanan = DetailPesanan::where('id_pesanan', $idPesanan)->get();
+
+        return view('struk',[
+            "detailPesanan" => $detailPesanan
+        ]);
     }
 }

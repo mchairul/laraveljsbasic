@@ -24,16 +24,23 @@
         <th></th>
         <th>Prize</th>
     </tr>
+    @php
+        $total = 0;
+    @endphp
+    @forelse ($detailPesanan as $pesanan)
     <tr>
-        <td>Ayam</td>
+        <td>{{ $pesanan->menu }}</td>
         <td>Rp</td>
-        <td>15000</td>
+        <td>Rp {{ $pesanan->harga }}</td>
     </tr>
-    <tr>
-        <td>Ayam</td>
-        <td>Rp</td>
-        <td>15000</td>
-    </tr>
+
+    @php
+        $total += intval($pesanan->harga);
+    @endphp
+
+    @empty
+    <p>no data</p>
+    @endforelse
     <tr>
         <td></td>
         <td></td>
@@ -42,11 +49,12 @@
     <tr>
         <td><b>Total</b></td>
         <td><b>Rp</b></td>
-        <td><b>15000</b></td>
+        <td><b>{{ $total }}</b></td>
     </tr>
 </table>
 </div>
 <button onclick="window.print()">cetak</button>
+<button onclick="window.location.href = '/dom'">kembali</button>
 @endsection
 
 @section('js')

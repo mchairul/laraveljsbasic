@@ -5,9 +5,9 @@
 @endsection
 
 @section('main-content')
-<form action="postdom" method="POST">
+<form action="postdom" method="POST" id="form">
     @csrf
-    nama : <input type="text" name="nama"><br><br>
+    nama : <input type="text" name="nama" required><br><br>
     Pesanan :
     <div id="divpesanan">
         <div id="inputpesanan">
@@ -39,5 +39,23 @@
         var ele = document.getElementById('inputpesanan' + id);
         ele.remove();
     }
+
+    //handle event form ketika disubmit
+    form.onsubmit = async (e) => {
+        //cegah form untuk submit
+        e.preventDefault();
+
+        //fetch ke server
+        let response = await fetch('postdom', {
+            method: 'POST',
+            body: new FormData(form)
+        });
+
+        //json 
+        let result = await response.json();
+
+        //redirect
+        window.location.href = 'struk/?id=' + result.id;
+    };
 </script>
 @endsection
